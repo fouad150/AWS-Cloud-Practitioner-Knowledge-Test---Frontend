@@ -1,8 +1,9 @@
 let questions_count =document.querySelector(".questions-count span");
-let spans_container=document.querySelector(".spans");
 let question_area=document.querySelector(".question-area");
 let answers_area=document.querySelector(".answers-area");
 let submit_button=document.querySelector(".submit-button");
+let spans_container=document.querySelector(".spans");
+let result_container=document.querySelector(".result");
 
 let index=0;
 let rightAnswers=0;
@@ -14,7 +15,7 @@ function getQuestions() {
     if (this.readyState === 4 && this.status === 200) {
         let questions_object = JSON.parse(this.responseText);
         let questions_array=questions_object.quiz_array;
-        // console.log(questions_array);
+        console.log(questions_array);
         let array_length=questions_array.length;
         // console.log(array_length);
         questions_count.innerHTML=array_length;//show the questions count in the html file
@@ -33,12 +34,12 @@ function getQuestions() {
         
          //onclick method
          submit_button.onclick = () => {
-            if(index<array_length-1){
-                let right_answer=questions_array[index].right_answer;
-                checkAnswer(right_answer,00);
+            let right_answer=questions_array[index].right_answer;
+            checkAnswer(right_answer,00);
+        
+            index++;
 
-                index++;
-
+            if(index<array_length){
                 //empty the previous question area and the answers area
                 question_area.innerHTML="";
                 answers_area.innerHTML="";
@@ -47,6 +48,9 @@ function getQuestions() {
 
                 //paint the span
                 paintSpan();
+
+            }else if(index==array_length){
+                showResult(array_length);
             }
             
          }
@@ -124,3 +128,23 @@ function paintSpan(){
     let spans = document.querySelectorAll(".spans span");
     spans[index].className="on";
 }
+
+function showResult(array_length){
+    question_area.remove();
+    answers_area.remove();
+    submit_button.remove();
+    spans_container.remove();
+    console.log(array_length);   
+    console.log(index);
+    if(rightAnswers>array_length*(70/100)){
+        result_container.innerHTML=`<span class=on>Perfect</span> you answered ${rightAnswers} from ${array_length}`;
+    }else if(rightAnswers<=array_length*(7/10)&&rightAnswers>=array_length*(1/2)){
+        result_container.innerHTML=`<span class=on>Good</span> you answered ${rightAnswers} from ${array_length}`;
+    }else{
+        result_container.innerHTML=`<span class=on>Not Good</span> you answered ${rightAnswers} from ${array_length}`;
+    }
+    
+}
+
+
+ 
