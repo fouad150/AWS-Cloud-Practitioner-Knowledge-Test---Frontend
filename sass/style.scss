@@ -1,81 +1,129 @@
+@import "__colors-variables";
+
+@mixin padding-and-bg_color($padding:20px,$bg_color:$light-color){
+    background-color:$bg_color;
+    padding: $padding;
+}
+
 *{
     box-sizing: border-box;
+    font-size: 18px;
 }
 body {
     font-family: Tahoma, Arial;
 }
 .quiz-app {
     margin: 20px auto;
-    width: 800px;
-    background-color: #f8f8f8;
+    width: 900px;
+    background-color: $quiz-app-bg;
     padding: 15px;
+
+    .quiz-info {
+        display: flex;
+        justify-content: space-between;
+        @include padding-and-bg_color();
+    }
+
+    .quiz-info .category span ,.quiz-info .questions-count span{
+        font-weight: bold;
+    }
+
+    .question-area {
+        margin-top: 15px;
+        @include padding-and-bg_color();
+        h2 {
+            margin: 0;
+            min-height: 44px;
+        }
+    }
+   
+    .answers-area {
+        @include padding-and-bg_color(0 20px 20px);
+        .answer {
+            position: relative;
+            @include padding-and-bg_color(15px,$answer-bg);
+            input {
+                cursor: pointer;
+                accent-color: $radiu-color;
+            }
+            input[type="Radio"]:checked + label {
+                color: $radiu-color;
+            }
+            label {
+                cursor: pointer;
+                font-weight: bold;
+                color: $gray-color;
+                font-size: 13px;
+                margin-left: 5px;
+                position: absolute;
+                top: 16px;
+            }
+        }
+        .answer:not(:last-child) {
+            border-bottom: 1px solid $border-color;
+        }
+    }
+
+    .submit-button {
+        display: block;
+        margin:14px 0px 0px 20px;
+        border-radius: 10px;
+        border: none;
+        color: $light-color;
+        font-weight: bold;
+        font-size: 15px;
+        cursor: pointer;
+        @include padding-and-bg_color(10px 15px,$on-color);
+    }
+    .spans{
+        margin: 14PX 0PX 14PX 22PX;
+        color: $gray-color;
+        span{
+            font-weight: bold;
+            font-size: 20px;
+            margin-right: 10px;
+        }
+    } 
+    .result{
+        padding: 15px 0px 15px 0px;
+    } 
 }
-.quiz-app .quiz-info {
-    display: flex;
-    justify-content: space-between;
-    background-color: #fff;
-    padding: 20px;
-}
-.quiz-app .quiz-info .category span ,.quiz-app .quiz-info .questions-count span{
-    font-weight: bold;
-}
-.quiz-app .question-area {
-    background-color: #fff;
-    padding: 20px;
-    margin-top: 15px;
-}
-.quiz-app .question-area h2 {
-    margin: 0;
-}
-.quiz-app .answers-area {
-background-color: #fff;
-padding: 0 20px 20px;
-}
-.quiz-app .answers-area .answer {
-background-color: #f9f9f9;
-padding: 15px;
-position: relative;
-}
-.quiz-app .answers-area .answer:not(:last-child) {
-border-bottom: 1px solid #dfdfdf;
-}
-.quiz-app .answers-area .answer input {
-    cursor: pointer;
-    accent-color: rgb(46, 251, 46);
-}
-.quiz-app .answers-area .answer input[type="Radio"]:checked + label {
-color: rgb(46, 251, 46);
-}
-.quiz-app .answers-area .answer label {
-cursor: pointer;
-font-weight: bold;
-color: #777;
-font-size: 13px;
-margin-left: 5px;
-position: absolute;
-top: 16px;
-}
-.quiz-app .submit-button {
-    background-color: rgb(7, 211, 7);
-    display: block;
-    margin:14px 0px 0px 20px;
-    border-radius: 10px;
-    padding: 10px 15px;
-    border: none;
-    color: #fff;
-    font-weight: bold;
-    font-size: 18px;
-    cursor: pointer;
-}
-.spans{
-    margin: 14PX 0PX 14PX 22PX;
-    color: #777;
-}
-.spans span{
-    font-weight: bold;
-    font-size: 20px;
-    margin-right: 10px;
-}
+
 .on{
-    color:rgb(7, 211, 7);
+    color:$on-color;
+}
+.dark-green{
+    color:$dark-green;
+}
+.good{
+    color: $good-color;
+}
+.not-good{
+    color: $not-good-color;
+}
+.bold{
+    font-weight: bold;
+}
+
+@media screen and (max-width:930px){
+    *{
+        box-sizing: border-box;
+        font-size: 15px;
+    }
+    body{
+        margin:0px;
+    }
+    .quiz-app{
+        width:100%; 
+        margin: 0px;
+        .answers-area .answer{
+            height: 60px;
+            label{
+                font-size: 11px;
+            }
+        }
+        .quiz-app .submit-button{
+            font-size: 11px;
+        }
+    }
 }

@@ -1,3 +1,4 @@
+let quiz_app=document.querySelector(".quiz-app");
 let questions_count =document.querySelector(".questions-count span");
 let question_area=document.querySelector(".question-area");
 let answers_area=document.querySelector(".answers-area");
@@ -7,6 +8,8 @@ let result_container=document.querySelector(".result");
 
 let index=0;
 let rightAnswers=0;
+let chosen_answers_array=[];
+let right_answers_array=[];
 
 
 function getQuestions() {
@@ -14,8 +17,7 @@ function getQuestions() {
     myRequest.onreadystatechange = function () {
     if (this.readyState === 4 && this.status === 200) {
         let questions_object = JSON.parse(this.responseText);
-        let questions_array=questions_object.quiz_array;
-        console.log(questions_array);
+        let questions_array=questions_object.quiz_array.sort((a, b) => 0.5 - Math.random());
         let array_length=questions_array.length;
         // console.log(array_length);
         questions_count.innerHTML=array_length;//show the questions count in the html file
@@ -30,12 +32,12 @@ function getQuestions() {
          }
         
 
-         addQuestionData(questions_array[index],00);
+         addQuestionData(questions_array[index]);
         
          //onclick method
          submit_button.onclick = () => {
             let right_answer=questions_array[index].right_answer;
-            checkAnswer(right_answer,00);
+            checkAnswer(right_answer);
         
             index++;
 
@@ -53,8 +55,7 @@ function getQuestions() {
                 showResult(array_length);
             }
             
-         }
-         
+         }     
 
     }
 }
@@ -63,7 +64,7 @@ function getQuestions() {
 }
  getQuestions();
 
-function addQuestionData(obj, count) {
+function addQuestionData(obj) {
     // the question
 
     let question = document.createElement("h2");
@@ -108,7 +109,7 @@ function addQuestionData(obj, count) {
     }
 }
 
-function checkAnswer (right_answer, count) {
+function checkAnswer (right_answer) {
     let answers = document.getElementsByName("answer_radio");
     let chosen_answer;
     for (let i = 0; i < answers.length; i++) {
@@ -116,11 +117,12 @@ function checkAnswer (right_answer, count) {
     chosen_answer = answers[i].dataset.answer;
     }
     }
-    // console.log(`Right Answer Is: ${right_answer}`);
-    // console.log(`Chosen Answer Is: ${chosen_answer}`);
     if (right_answer === chosen_answer) {
     rightAnswers++;
     console.log("Good Answer");
+    }else{
+        chosen_answers_array.push(chosen_answer);
+        right_answers_array.push(right_answer);
     }
 }
 
@@ -137,13 +139,18 @@ function showResult(array_length){
     console.log(array_length);   
     console.log(index);
     if(rightAnswers>array_length*(70/100)){
-        result_container.innerHTML=`<span class=on>Perfect</span> you answered ${rightAnswers} from ${array_length}`;
+        result_container.innerHTML=`<span class='on bold'>Perfect</span> you answered ${rightAnswers} from ${array_length}.`;
     }else if(rightAnswers<=array_length*(7/10)&&rightAnswers>=array_length*(1/2)){
-        result_container.innerHTML=`<span class=on>Good</span> you answered ${rightAnswers} from ${array_length}`;
+        result_container.innerHTML=`<span class='good bold'>Good</span> you answered ${rightAnswers} from ${array_length}.`;
     }else{
-        result_container.innerHTML=`<span class=on>Not Good</span> you answered ${rightAnswers} from ${array_length}`;
+        result_container.innerHTML=`<span class='not-good bold'>Not Good</span> you answered just ${rightAnswers} from ${array_length}.`;
     }
-    
+    if(chosen_answers_array.length>0){
+        quiz_app.innerHTML+="<span class=bold>The Correction:</span><br>";
+        for (let i = 0; i < chosen_answers_array.length; i++) {
+            quiz_app.innerHTML+=`<span class=not-good>the chosen answer is:</span> ${chosen_answers_array[i]} <br> <span class=dark-green>the right answer is:</span> ${right_answers_array[i]}<br><br>`;   
+        }
+    }
 }
 
 
